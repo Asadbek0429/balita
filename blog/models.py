@@ -3,7 +3,7 @@ from config.base_model import BaseModel
 from ckeditor.fields import RichTextField
 
 
-class Tag(BaseModel):
+class Category(BaseModel):
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -12,9 +12,10 @@ class Tag(BaseModel):
 
 class Post(BaseModel):
     title = models.CharField(max_length=120)
-    tags = models.ManyToManyField(Tag)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     image = models.ImageField(upload_to='post')
     description = RichTextField()
+    views = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=1)
 
     def __str__(self):

@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Tag, Post, Comment
+from .models import Category, Post, Comment
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'preview', 'created_at', 'is_published']
+    list_display = ['id', 'title', 'preview', 'created_at', 'views', 'is_published']
     list_display_links = ['id', 'title']
     search_fields = ['title']
 
@@ -12,7 +12,7 @@ class PostAdmin(admin.ModelAdmin):
         return format_html(f"<img width=50 height=50 src='{obj.image.url}'>")
 
 
-class TagAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
     list_display_links = ['id', 'name']
     search_fields = ['name']
@@ -25,5 +25,5 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Post, PostAdmin)
-admin.site.register(Tag, TagAdmin)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Contact
 import telepot
-from blog.models import Tag, Post
+from blog.models import Category, Post
 
 
 def contact_view(request):
@@ -18,7 +18,8 @@ def contact_view(request):
 
     d = {
         'contact': 'active',
-        'popular_posts': Post.objects.filter(is_published=True).order_by('-created_at')[:3],
-        'tags': Tag.objects.all(),
+        'popular_posts': Post.objects.filter(is_published=True).order_by('-views')[:3],
+        'latest_posts': Post.objects.filter(is_published=True).order_by('-created_at')[:3],
+        'categories': Category.objects.all(),
     }
     return render(request, 'contact.html', d)

@@ -5,23 +5,21 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col-md-6">
-                    <h2 class="mb-4">Tag: {{ tag }}</h2>
+                    <h2 class="mb-4">Category: {{ category }}</h2>
                 </div>
             </div>
             <div class="row blog-entries">
                 <div class="col-md-12 col-lg-8 main-content">
                     <div class="row mb-5 mt-5">
                         <div class="col-md-12">
-                            {% for post in posts %}
+                            {% for post in posts.page %}
                                 <div class="post-entry-horzontal">
                                     <a href="/blog/{{ post.id }}">
                                         <div class="image element-animate" data-animate-effect="fadeIn"
                                              style="background-image: url({{ post.image.url }});"></div>
                                         <span class="text">
                                         <div class="post-meta">
-                                            {% for tag in posts.tags.all %}
-                                                <span class="category">{{ tag }}</span>
-                                            {% endfor %}
+                                            <span class="category">{{ post.category }}</span>
                                             <span class="mr-2">{{ post.created_at.date }}</span> &bullet;
                                             <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
                                         </div>
@@ -36,11 +34,50 @@
                         <div class="col-md-12 text-center">
                             <nav aria-label="Page navigation" class="text-center">
                                 <ul class="pagination">
-                                    <li class="page-item  active"><a class="page-link" href="#">Prev</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                    {% if posts.count >= posts.limit %}
+                                        {% if posts.has_previous %}
+                                            <li class="page-item">
+                                                {% if search %}
+                                                    <a class="page-link"
+                                                       href="/blog/?cat={{ category.id }}&text={{ search }}&p={{ posts.previous_page_number }}">Prev</a>
+                                                {% else %}
+                                                    <a class="page-link"
+                                                       href="/blog/?cat={{ category.id }}&p={{ posts.previous_page_number }}">Prev</a>
+                                                {% endif %}
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item"><a class="page-link">Prev</a></li>
+                                        {% endif %}
+                                        {% for number in posts.page_range %}
+                                            {% if number == posts.number %}
+                                                <li class="page-item active"><a class="page-link">{{ number }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item">
+                                                    {% if search %}
+                                                        <a class="page-link"
+                                                           href="/blog/?cat={{ category.id }}&text={{ search }}&p={{ number }}">{{ number }}</a>
+                                                    {% else %}
+                                                        <a class="page-link"
+                                                           href="/blog/?cat={{ category.id }}&p={{ number }}">{{ number }}</a>
+                                                    {% endif %}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if posts.has_next %}
+                                            <li class="page-item">
+                                                {% if search %}
+                                                    <a class="page-link"
+                                                       href="/blog/?cat={{ category.id }}&text={{ search }}&p={{ posts.next_page_number }}">Next</a>
+                                                {% else %}
+                                                    <a class="page-link"
+                                                       href="/blog/?cat={{ category.id }}&p={{ posts.next_page_number }}">Next</a>
+                                                {% endif %}
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item"><a class="page-link">Next</a></li>
+                                        {% endif %}
+                                    {% endif %}
                                 </ul>
                             </nav>
                         </div>
@@ -48,12 +85,11 @@
                 </div>
                 <div class="col-md-12 col-lg-4 sidebar">
                     <div class="sidebar-box search-form-wrap">
-                        <form action="#" class="search-form">
-                            <div class="form-group">
-                                <span class="icon fa fa-search"></span>
-                                <input type="text" class="form-control" id="s"
-                                       placeholder="Type a keyword and hit enter">
-                            </div>
+                        <form class="d-flex" method="get">
+                            <input type="hidden" name="cat" value="{{ category.id }}"/>
+                            <input class="form-control me-2" type="search" placeholder="Search"
+                                   aria-label="Search" name="text">
+                            <button class="btn btn-primary btn-outline-success fa fa-search" type="submit"></button>
                         </form>
                     </div>
                     <div class="sidebar-box">
@@ -78,51 +114,29 @@
                         <h3 class="heading">Popular Posts</h3>
                         <div class="post-entry-sidebar">
                             <ul>
-                                <li>
-                                    <a href>
-                                        <img src="{% static 'images/img_2.jpg' %}" alt="Image placeholder" class="mr-4">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                                {% for post in popular_posts %}
+                                    <li>
+                                        <a href="/blog/{{ post.id }}">
+                                            <img src="{{ post.image.url }}" alt="Image placeholder"
+                                                 class="mr-4">
+                                            <div class="text">
+                                                <h4>{{ post.title | truncatechars:50 }}</h4>
+                                                <div class="post-meta">
+                                                    <span class="mr-2">{{ post.created_at }}</span> &bullet;
+                                                    <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href>
-                                        <img src="{% static 'images/img_4.jpg' %}" alt="Image placeholder" class="mr-4">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href>
-                                        <img src="{% static 'images/img_12.jpg' %}" alt="Image placeholder"
-                                             class="mr-4">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
                     <div class="sidebar-box">
-                        <h3 class="heading">Tags</h3>
+                        <h3 class="heading">Categories</h3>
                         <ul class="tags">
-                            {% for tag in tags %}
-                                <li><a href="/blog/?tag={{ tag.id }}">{{ tag }}</a></li>
+                            {% for category in categories %}
+                                <li><a href="/blog/?cat={{ category.id }}">{{ category }}</a></li>
                             {% endfor %}
                         </ul>
                     </div>

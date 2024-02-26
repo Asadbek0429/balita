@@ -81,10 +81,11 @@
                     <a href="#"><span class="fa fa-snapchat"></span></a>
                 </div>
                 <div class="col-3 search-top">
-
-                    <form action="#" class="search-top-form">
-                        <span class="icon fa fa-search"></span>
-                        <input type="text" id="s" placeholder="Type keyword to search...">
+                    <form action="/blog/" class="d-flex" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Search"
+                               aria-label="Search" name="text">
+                        <button class="btn btn-outline-success fa fa-search" type="submit"
+                                style="background-color: #212121; color: white"></button>
                     </form>
                 </div>
             </div>
@@ -111,8 +112,8 @@
                            data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">Categories</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown05">
-                            {% for tag in tags %}
-                                <a class="dropdown-item" href="/blog/?tag={{ tag.id }}">{{ tag }}</a>
+                            {% for category in categories %}
+                                <a class="dropdown-item" href="/blog/?cat={{ category.id }}">{{ category }}</a>
                             {% endfor %}
                         </div>
                     </li>
@@ -149,42 +150,21 @@
                         <h3>Latest Post</h3>
                         <div class="post-entry-sidebar">
                             <ul>
-                                <li>
-                                    <a href>
-                                        <img src="{% static 'images/img_6.jpg' %}" alt="Image placeholder" class="mr-4">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                                {% for post in latest_posts %}
+                                    <li>
+                                        <a href="/blog/{{ post.id }}">
+                                            <img src="{{ post.image.url }}" alt="Image placeholder"
+                                                 class="mr-4">
+                                            <div class="text">
+                                                <h4>{{ post.title | truncatechars:80 }}</h4>
+                                                <div class="post-meta">
+                                                    <span class="mr-2">{{ post.created_at.date }} </span> &bullet;
+                                                    <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href>
-                                        <img src="{% static 'images/img_3.jpg' %}" alt="Image placeholder" class="mr-4">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href>
-                                        <img src="{% static 'images/img_4.jpg' %}" alt="Image placeholder" class="mr-4">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span> &bullet;
-                                                <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
+                                        </a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>

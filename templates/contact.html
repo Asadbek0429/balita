@@ -82,10 +82,10 @@
                         </div>
                     </div>
                     <div class="sidebar-box">
-                        <h3 class="heading">Tags</h3>
+                        <h3 class="heading">Categories</h3>
                         <ul class="tags">
-                            {% for tag in tags %}
-                                <li><a href="/blog/?tag={{ tag.id }}">{{ tag }}</a></li>
+                            {% for category in categories %}
+                                <li><a href="/blog/?cat={{ category.id }}">{{ category }}</a></li>
                             {% endfor %}
                         </ul>
                     </div>
