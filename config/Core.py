@@ -10,7 +10,9 @@ class CPaginator:
         self.count = 0
 
     def page(self):
-        self.count = self.model.raw("SELECT Count(*) as id " + self.query[self.query.find("FROM"):])[0].id
+        print("SELECT Count(*) " + self.query[self.query.find("FROM"):self.query.find("ORDER BY")])
+        self.count = \
+        self.model.raw("SELECT Count(*) as id " + self.query[self.query.find("FROM"):self.query.find("ORDER BY")])[0].id
         return self.model.raw(self.query + f" LIMIT {self.limit} OFFSET {(self.p - 1) * self.limit}")
 
     def number(self):
